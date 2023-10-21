@@ -29,8 +29,11 @@ const pkpwallet = new PKPEthersWallet({
   },
   pkpPubKey:
     "0x04a3a545d5851c05ab0a36a0fb3f453756264aa8b5be5b199f59820560c33adaabcd97ea9da0604e7557fff94752c70f15416103a97f2e200bac989e6f11f616fc",
-  rpc: "https://polygon-mumbai.g.alchemy.com/v2/IcInT1a5d8xNalg3T7ZrtwndijtYJg32",
+  rpc: "https://chain-rpc.litprotocol.com/http",
 });
+
+// Or should I add mumbai RPC? https://polygon-mumbai.g.alchemy.com/v2/IcInT1a5d8xNalg3T7ZrtwndijtYJg32
+
 
 const trackTransactions = async () => {
   await pkpwallet.init();
