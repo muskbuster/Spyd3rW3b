@@ -37,8 +37,11 @@ const pkpwallet = new PKPEthersWallet({
 
 const trackTransactions = async () => {
   await pkpwallet.init();
+  console.log(pkpwallet.getAddress());
   let iface = new ethers.utils.Interface(abi.abi);
   let encodeCall = iface.encodeFunctionData("pause", []);
+  console.log(encodeCall);
+
   //should establish connection now
   const contract = new ethers.Contract(abi.address, abi.abi, MUMBAI_80001);
   const Signer = new ethers.Wallet(process.env.PRIVATE_KEY, MUMBAI_80001);
@@ -84,26 +87,43 @@ const trackTransactions = async () => {
           const gas = tx.gasPrice;
           if (gasSent < gasNeeded) {
             console.log("gasSent is less than gasNeeded");
-            const txn = {
-              from: tx.from,
-              to: tx.to,
-              data: tx.data,
-              chainId: 80001
-            };
-            const sendTxn = await pkpwallet.sendTransaction(txn);
-            console.log("sendTxn: ", sendTxn);
-            //call pause function to pause the contract
-            const pause = await contract
-              .connect(Signer)
-              .pause({ gasLimit: 63000, gasPrice: gas });
-            console.log("pause: ", pause);
+            try {
+              const txn = {
+                from: tx.from,
+                to: tx.to,
+                data: encodeCall,
+                chainId: 80001
+              };
+
+              const sendTxn = await pkpwallet.sendTransaction(txn);
+              console.log("sendTxn: ", sendTxn);
+            } catch {
+
+              //call pause function to pause the contract
+              const pause = await contract
+                .connect(Signer)
+                .pause({ gasLimit: 63000, gasPrice: gas });
+              console.log("pause: ", pause);
+            }
           }
           console.log("trying to monitor repeated calls");
           if (Monitoring[txData.from] - blockNumber > 20) {
-            const pause = await contract
-              .connect(Signer)
-              .pause({ gasLimit: 63000, gasPrice: gas });
-            console.log("pause: ", pause);
+            try {
+              const txn = {
+                from: tx.from,
+                to: tx.to,
+                data: encodeCall,
+                chainId: 80001
+              };
+
+              const sendTxn = await pkpwallet.sendTransaction(txn);
+              console.log("sendTxn: ", sendTxn);
+            } catch {
+              const pause = await contract
+                .connect(Signer)
+                .pause({ gasLimit: 63000, gasPrice: gas });
+              console.log("pause: ", pause);
+            }
           }
           Monitoring[txData.from] = blockNumber;
           console.log("Monitoring: ", Monitoring);
@@ -113,14 +133,42 @@ const trackTransactions = async () => {
             ethValue != 0 &&
             EthertransferBlock[txData.from] - blockNumber > 20
           ) {
-            const pause = await contract
-              .connect(Signer)
-              .pause({ gasLimit: 63000 });
-            console.log("pause: ", pause);
+            console.log("DEBUGGING")
+            try {
+              console.log("Eth value is 0 and pausing using pkp")
+              const txn = {
+                from: tx.from,
+                to: tx.to,
+                data: encodeCall,
+                chainId: 80001
+              };
+
+              await pkpwallet.sendTransaction(txn)
+
+            } catch {
+              const pause = await contract
+                .connect(Signer)
+                .pause({ gasLimit: 63000 });
+              console.log("pause: ", pause);
+            }
           }
           EthertransferBlock[txData.from] = blockNumber;
-
-          if (ethValue == 0) {
+          console.log(ethValue);
+          console.log((ethers.utils.formatEther(ethValue) == 0))
+          if (ethers.utils.formatEther(ethValue) == 0) {
+            console.log("Eth value is 0 and  using pkp to pause")
+            const txn = {
+              from: tx.from,
+              to: tx.to,
+              data: encodeCall,
+              chainId: 80001
+            };
+            await pkpwallet.sendTransaction(txn).catch(async () => {
+              await contract
+                .connect(Signer)
+                .pause({ gasLimit: 63000 });
+            })
+            console.log("sendTxn: ", sendTxn);
             console.log("ethValue is zero");
           }
         } else if (receipt.to !== abi.address) {

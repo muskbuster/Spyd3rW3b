@@ -15,7 +15,7 @@ const GOERLIETH = new ethers.providers.JsonRpcProvider(
 );
 
 const QuickNode = new ethers.providers.WebSocketProvider(
-  "wss://purple-lively-moon.matic-testnet.discover.quiknode.pro/0d97882d0b726da5b7a929a3e8c5efe837f1dd78/"
+  "wss://polygon-mumbai.g.alchemy.com/v2/IcInT1a5d8xNalg3T7ZrtwndijtYJg32"
 );
 
 
