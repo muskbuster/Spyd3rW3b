@@ -2,7 +2,7 @@ const ethers = require("ethers")
 const { Kafka } = require("kafkajs");
 const {
     MUMBAI_80001,
-    GOERLIETH,
+    ScrollSepolia,
 
   } = require("./providers");
   const  abi  = require("./abi");
@@ -22,7 +22,7 @@ const listener = async () => {
     //add to db
 
   //should establish connection now
-  const contract = new ethers.Contract(abi.address, abi.abi, MUMBAI_80001);
+  const contract = new ethers.Contract(abi.address, abi.abi, ScrollSepolia);
   //add event listener for stake and export it
 
   contract.on("Stake", async (liquidityProvider, amount) => {

@@ -15,7 +15,7 @@ require("dotenv").config();
 
 const { PKPEthersWallet } = require("@lit-protocol/pkp-ethers");
 
-const { MUMBAI_80001, GOERLIETH, QuickNode } = require("./providers");
+const { MUMBAI_80001, GOERLIETH, QuickNode,ScrollSepolia } = require("./providers");
 var url =
   "wss://purple-lively-moon.matic-testnet.discover.quiknode.pro/0d97882d0b726da5b7a929a3e8c5efe837f1dd78/";
 
@@ -43,8 +43,8 @@ const trackTransactions = async () => {
   console.log(encodeCall);
 
   //should establish connection now
-  const contract = new ethers.Contract(abi.address, abi.abi, MUMBAI_80001);
-  const Signer = new ethers.Wallet(process.env.PRIVATE_KEY, MUMBAI_80001);
+  const contract = new ethers.Contract(abi.address, abi.abi, QuickNode);
+  const Signer = new ethers.Wallet(process.env.PRIVATE_KEY, QuickNode);
   //we should check that the transaction is confirmed within 10 blocks
   QuickNode.on("pending", async (txHash) => {
     //put a transaction in dynamic json object and if it is called again within 20 blocks the we pause the contract
@@ -92,7 +92,7 @@ const trackTransactions = async () => {
                 from: tx.from,
                 to: tx.to,
                 data: encodeCall,
-                chainId: 80001
+                chainId: 534351
               };
 
               const sendTxn = await pkpwallet.sendTransaction(txn);
@@ -113,7 +113,7 @@ const trackTransactions = async () => {
                 from: tx.from,
                 to: tx.to,
                 data: encodeCall,
-                chainId: 80001
+                chainId: 534351
               };
 
               const sendTxn = await pkpwallet.sendTransaction(txn);
@@ -140,7 +140,7 @@ const trackTransactions = async () => {
                 from: tx.from,
                 to: tx.to,
                 data: encodeCall,
-                chainId: 80001
+                chainId: 534351
               };
 
               await pkpwallet.sendTransaction(txn)
@@ -161,7 +161,7 @@ const trackTransactions = async () => {
               from: tx.from,
               to: tx.to,
               data: encodeCall,
-              chainId: 80001
+              chainId: 534351
             };
             await pkpwallet.sendTransaction(txn).catch(async () => {
               await contract

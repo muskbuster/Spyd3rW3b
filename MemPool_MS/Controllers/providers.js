@@ -15,9 +15,12 @@ const GOERLIETH = new ethers.providers.JsonRpcProvider(
 );
 
 const QuickNode = new ethers.providers.WebSocketProvider(
-  "wss://polygon-mumbai.g.alchemy.com/v2/IcInT1a5d8xNalg3T7ZrtwndijtYJg32"
+  "wss://indulgent-palpable-scion.scroll-testnet.quiknode.pro/6dc6b1f66185c9e7fd1defdd3304b10b00bf2fe1",
 );
 
+const ScrollSepolia = new ethers.providers.JsonRpcProvider(
+  "https://rpc.ankr.com/scroll_sepolia_testnet",
+);
 
 /**
  * Export
@@ -25,5 +28,6 @@ const QuickNode = new ethers.providers.WebSocketProvider(
 module.exports = {
   MUMBAI_80001,
   GOERLIETH,
-  QuickNode
+  QuickNode,
+  ScrollSepolia
 };
